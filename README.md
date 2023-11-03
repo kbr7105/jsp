@@ -1,4 +1,7 @@
 <Resource auth="Container" driverClassName="oracle.jdbc.OracleDriver" maxIdle="10" maxTotal="20" maxWaitMillis="-1" name="jdbc/myoracle" password="tiger" type="javax.sql.DataSource" url="jdbc:oracle:thin:@192.168.0.32:1521:xe" username="scott"/>
+![Slide1](https://github.com/kbr7105/jsp/assets/147116001/ced6e558-0b49-4542-9367-9c24320a9f04)
+
+
 <img src="readme/Slide1.jpg"/>
 <img src="readme/Slide2.jpg"/>
 <img src="readme/Slide3.jpg"/>
