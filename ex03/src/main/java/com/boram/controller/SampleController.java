@@ -11,10 +11,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.boram.domain.SampleVO;
+import com.boram.domain.Ticket;
 
 import lombok.extern.log4j.Log4j;
 
@@ -76,5 +80,25 @@ public class SampleController {
 			result = ResponseEntity.status(HttpStatus.OK).body(vo);
 		}
 		return result;
+	}
+	
+	//파라미터 값을 data로 받아옴
+	@GetMapping("/product/{cat}/{pid}")
+	public String[] getPath(@PathVariable("cat") String cat, @PathVariable("pid")String pid) {
+		return new String[] {"category : " + cat, "productid : "+pid};
+	}
+	
+	@PostMapping("/ticket")
+	public Ticket convert(@RequestBody Ticket ticket) {
+		log.info("ticket>>"+ticket); 
+		//{"tno":10, "owner":"aaa", "grade":"B"}
+		return ticket;
+	}
+	
+	@PostMapping("/ticket2")
+	public Ticket convert2(Ticket ticket) {
+		log.info("ticket>>"+ticket); 
+		//{"tno":10, "owner":"aaa", "grade":"B"} -> 값이 안들어감 => requestBody 필수
+		return ticket;
 	}
 }
