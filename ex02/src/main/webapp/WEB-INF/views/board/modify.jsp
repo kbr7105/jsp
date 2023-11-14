@@ -22,6 +22,8 @@
 						<!-- action="/board/register" -->
 						<input type="hidden" name="pageNum" value="${cri.pageNum}" /> 
 						<input type="hidden" name="amount" value="${cri.amount}" />
+						<input type="hidden" name="type" value="${cri.type}"/>
+						<input type="hidden" name="keyword" value="${cri.keyword}"/>
 
 						<div class="form-group">
 							<label for="bno">Bno</label> <input class="form-control"
@@ -69,9 +71,13 @@
 				formObj.attr("action", "/board/list").attr("method", "get");
 				var pageNumTag = $("input[name='pageNum']").clone();
 				var amountTag = $("input[name='amount']").clone();
+				var typeTag = $("input[name='type']").clone();
+				var keywordTag = $("input[name='keyword']").clone();
 				formObj.empty(); //필요없는 쿼리스트링 날려줌 -> 전부 날아가기 때문에 추가하고 싶은 쿼리는 추가로 다시 append			
 				formObj.append(pageNumTag);
 				formObj.append(amountTag);
+				formObj.append(typeTag);
+				formObj.append(keywordTag);
 			}
 
 			formObj.submit();

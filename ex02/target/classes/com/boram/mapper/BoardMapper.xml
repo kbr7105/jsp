@@ -3,6 +3,21 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.boram.mapper.BoardMapper">
+	<sql id="criteria">
+		<trim prefix="(" suffix=") and">
+			<foreach collection="typeArr" item="type" separator="or">
+				<if test="type=='T'.toString()">
+					title like '%' || #{keyword} || '%'
+				</if>
+				<if test="type=='C'.toString()">
+					content like '%' || #{keyword} || '%'
+				</if>
+				<if test="type=='W'.toString()">
+					writer like '%' || #{keyword} || '%'
+				</if>
+			</foreach>
+		</trim>
+	</sql>
 
 	<select id="getList" resultType="com.boram.domain.BoardVO">
 		select * from tbl_board where
@@ -51,27 +66,31 @@
   	select * from(select /*+index_desc(tbl_board pk_board)*/ rownum rn, bno, title, content, writer, regidate, updatedate from tbl_board where 
   	
   	]]>
-  	<!-- criteria typearr / gettype 이므로 그냥 typearr -->
-  	<trim prefix="(" suffix=") and" >
-	  	<foreach collection="typeArr" item="type" separator="or">
-	  		<if test="type=='T'.toString()">
-	  			title like '%' || #{keyword} || '%'
-	  		</if>
-	  			<if test="type=='C'.toString()">
-	  			content like '%' || #{keyword} || '%'
-	  		</if>
-	  			<if test="type=='W'.toString()">
-	  			writer like '%' || #{keyword} || '%'
-	  		</if>
-	  	</foreach>
-  	</trim>
+  	<include refid="criteria"></include>
+		<!-- criteria typearr / gettype 이므로 그냥 typearr -->
+<!-- 		<trim prefix="(" suffix=") and">
+			<foreach collection="typeArr" item="type" separator="or">
+				<if test="type=='T'.toString()">
+					title like '%' || #{keyword} || '%'
+				</if>
+				<if test="type=='C'.toString()">
+					content like '%' || #{keyword} || '%'
+				</if>
+				<if test="type=='W'.toString()">
+					writer like '%' || #{keyword} || '%'
+				</if>
+			</foreach>
+		</trim> -->
   	<![CDATA[
   		rownum <= #{pageNum}*#{amount})where rn> (#{pageNum}-1)*#{amount}
   	]]>
 	</select>
 
 	<select id="getTotalCount" resultType="int">
-		select count(*) from tbl_board where bno>0
+		select count(*) from
+		tbl_board where
+		<include refid="criteria"></include>
+		 bno>0
 	</select>
 
 	<!-- 검색어 -->
@@ -80,7 +99,8 @@
   		select * from tbl_board where
   	]]>
 		<trim suffix="and">
-			<foreach collection="map" index="key" item="val" separator="or" open="(" close=")">
+			<foreach collection="map" index="key" item="val"
+				separator="or" open="(" close=")">
 				<if test="key=='T'.toString()">
 					title like #{val}
 				</if>

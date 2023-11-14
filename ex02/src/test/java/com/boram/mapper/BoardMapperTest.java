@@ -74,14 +74,17 @@ public class BoardMapperTest {
 	public void testGetListwithPaging() {
 		Criteria cri = new Criteria();
 		cri.setAmount(10);
-		cri.setPageNum(2);
+		cri.setPageNum(3);
 		List<BoardVO> list = mapper.getListWithPaging(cri);
 		list.forEach(board->log.info(board));
 	}
 	
 	@Test
 	public void getCountTest() {
-		log.info(mapper.getTotalCount(new Criteria(1,10)));
+		Criteria cri = new Criteria();
+		cri.setType("TCW");
+		cri.setKeyword("테스트");
+		log.info(mapper.getTotalCount(cri));
 		
 	}
 	
@@ -100,8 +103,11 @@ public class BoardMapperTest {
 	@Test
 	public void testSearchPaging() {
 		Criteria cri = new Criteria();
-		cri.setType("TWC");
-		cri.setKeyword("테스트");
+		cri.setType("");
+		cri.setKeyword("");
+		/*
+		 * cri.setType("TWC"); cri.setKeyword("테스트");
+		 */
 		/*
 		 * List<BoardVO> list = mapper.getListWithPaging(cri); log.info(list);
 		 */

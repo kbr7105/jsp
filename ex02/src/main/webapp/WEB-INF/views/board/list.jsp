@@ -48,6 +48,37 @@
 							</tbody>
 						</c:forEach>
 					</table>
+					<!-- 검색조건 처리 -->
+					<div class="row">
+						<div class="col-lg-12">
+							<form id="searchForm" action="/board/list" method="get">
+<%-- 								<select name='type'>
+									<option value="${pageMaker.cri.type == null?'selected':''}">---</option>
+									<option value="T" <c:out value="${pageMaker.cri.type eq 'T'? 'selected':''}"/>>제목</option>
+									<option value="C" <c:out value="${pageMaker.cri.type eq 'C'? 'selected':''}"/>>내용</option>
+									<option value="W" <c:out value="${pageMaker.cri.type eq 'W'? 'selected':''}"/>>작성자</option>
+									<option value="TC" <c:out value="${pageMaker.cri.type eq 'TC'? 'selected':''}"/>>제목 or 내용</option>
+									<option value="TW" <c:out value="${pageMaker.cri.type eq 'TW'? 'selected':''}"/>>제목 or 작성자</option>
+									<option value="CW" <c:out value="${pageMaker.cri.type eq 'CW'? 'selected':''}"/>>내용 or 작성자</option>
+									<option value="TCW" <c:out value="${pageMaker.cri.type eq 'TCW'? 'selected':''}"/>>제목 or 내용 or 작성자</option>
+								</select> --%>
+								<select name='type' id="type">
+									<option value="${pageMaker.cri.type == null?'selected':''}">---</option>
+									<option value="T" >제목</option>
+									<option value="C" >내용</option>
+									<option value="W" >작성자</option>
+									<option value="TC" >제목 or 내용</option>
+									<option value="TW">제목 or 작성자</option>
+									<option value="CW" <c:out value="${pageMaker.cri.type eq 'CW'? 'selected':''}"/>>내용 or 작성자</option>
+									<option value="TCW" <c:out value="${pageMaker.cri.type eq 'TCW'? 'selected':''}"/>>제목 or 내용 or 작성자</option>
+								</select>
+								<input type="text" name="keyword" value="${pageMaker.cri.keyword}"/>
+								<input type="hidden" name="pageNum" value="${pageMaker.cri.pageNum}"/>
+								<input type="hidden" name="amount" value="${pageMaker.cri.amount}"/>
+								<button class="btn btn-default">Search</button>
+							</form>
+						</div>
+					</div>
 
 					<!-- 페이징 -->
 					<div class="pull-right">
@@ -57,7 +88,7 @@
 						</c:if>	
 						<c:forEach begin="${pageMaker.startPage}"
 							end="${pageMaker.endPage}" var="num">
-							<li class="page-item" ${pageMaker.cri.pageNum == num? 'activate' : ''}>
+							<li class="page-item  ${pageMaker.cri.pageNum == num ? 'active' : ''}" >
 								<a class="page-link" href="${num}">${num}</a>
 							</li>
 						</c:forEach>
@@ -66,9 +97,13 @@
 						</c:if>	
 						</ul>
 					</div>
+					
+					<!-- 전달 폼 -->
 					<form id="actionForm" action="/board/list" method="get">
-						<input type="hidden" name="pageNum" value="${pageMaker.cri.pageNum}">
-						<input type="hidden" name="amount" value="${pageMaker.cri.amount}">
+						<input type="hidden" name="pageNum" value="${pageMaker.cri.pageNum}"/>
+						<input type="hidden" name="amount" value="${pageMaker.cri.amount}"/>
+						<input type="hidden" name="type" value="${pageMaker.cri.type}"/>
+						<input type="hidden" name="keyword" value="${pageMaker.cri.keyword}"/>
 					</form>
 
 					<!-- 모달창 추가 -->
@@ -124,19 +159,20 @@
 								"게시글" + parseInt(result) + "번이 등록되었습니다.");
 					}
 					$("#myModal").modal("show");
-				}
+				};
 
 				//register 호출
 				$("#regBtn").on("click", function() {
 					self.location = "/board/register";
-				})
+				});
 				
 				
 				//페이지 버튼 클릭 이동
 				var actionForm = $("#actionForm");
 				$(".page-item a").on("click",function(e){
 					e.preventDefault();
-					actionForm.find("input[name='pageNum']").val($(this).attr("href")); //클릭한 num 의 href value 값을 가져와 name=pageNum 의 val 값에 넣음
+					console.log("test--------------------------");
+					actionForm.find("input[name='pageNum']").val($(this).attr("href")); /* //클릭한 num 의 href value 값을 가져와 name=pageNum 의 val 값에 넣음 */
 					actionForm.submit();
 				});
 				
@@ -148,6 +184,28 @@
 					actionForm.submit(); //form 제출
 				});
 				
+				//검색버튼 이벤트 처리
+				var searchForm = $("#searchForm");
+				$("#searchForm button").on("click", function(e){
+					if(!searchForm.find("option:selected").val()){
+						alert("검색 종류를 선택하세요");
+						return false;	
+					};
+					if(!searchForm.find("input[name='keyword']").val()){
+						alert("키워드를 입력하세요");
+						return false;	
+					};
+					searchForm.find("input[name='pageNum']").val("1");
+					e.preventDefault();
+					
+					searchForm.submit();
+				});
+				
+				//select 체크
+				var select = "${pageMaker.cri.type}";
+				if(select != ""){
+			         $('#type option[value= '+ select +']').prop("selected", true);
+				};
 				
 			});
 	
